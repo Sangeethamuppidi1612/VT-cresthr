@@ -10,33 +10,37 @@ import edu.vt.crest.hr.entity.EmployeeEntity;
  */
 public interface EmployeeService {
   /**
-   * TODO - Implement this method
+   * Method to create employee
    * @param employee the EmployeeEntity to create
    * @return the new EmployeeEntity
+   * @throws Exception 
    */
-  EmployeeEntity createEmployee(EmployeeEntity employee);
+  EmployeeEntity createEmployee(EmployeeEntity employee) throws Exception;
 
   /**
-   * TODO - Implement this method
+   * Method to find employee by id
    * @param id of the EmployeeEntity to return
    * @return the matching EmployeeEntity
+   * @throws Exception 
    */
-  EmployeeEntity findById(Long id);
+  EmployeeEntity findById(Long id) throws Exception;
 
   /**
-   * TODO - Implement this method
+   * Method to get employees list within given range
    * @param startPosition the index of the first EmployeeEntity to return
    * @param maxResult the maximum number of EmployeeEntity(s) to return
    *                  beyond the startPosition
    * @return a list of EmployeeEntity(s)
+ * @throws Exception 
    */
-  List<EmployeeEntity> listAll(Integer startPosition, Integer maxResult);
+  List<EmployeeEntity> listAll(Integer startPosition, Integer maxResult) throws Exception;
 
   /**
-   * TODO - Implement this method
+   * Method to update an employee
    * @param id the id of the EmployeeEntity to update
    * @param employee the entity used to update
    * @return the updated EmployeeEntity
+ * @throws Exception 
    */
-  EmployeeEntity update(Long id, EmployeeEntity employee);
+  EmployeeEntity update(Long id, EmployeeEntity employee) throws Exception;
 }

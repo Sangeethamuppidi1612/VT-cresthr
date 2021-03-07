@@ -29,7 +29,7 @@ public class DepartmentResource {
 	DepartmentService departmentService;
 
 	/**
-	 * TODO - Implement this method
+	 * Endpoint to create department
 	 * @param department the DepartmentEntity to create
 	 * @return a Response containing the new DepartmentEntity
 	 */
@@ -37,11 +37,22 @@ public class DepartmentResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response create(DepartmentEntity department) {
-		return null;
+		try {
+			DepartmentEntity createdDepartment = departmentService.createDepartment(department);
+			if(createdDepartment != null)
+			{ 
+				return Response.ok(createdDepartment).build();
+			}
+			else throw new Exception("Testingggg Department not created");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
 	}
 
 	/**
-	 * TODO - Implement this method
+	 * Endpoint to find department by id
 	 * @param id of the DepartmentEntity to return
 	 * @return a Response containing the matching DepartmentEntity
 	 */
@@ -49,26 +60,32 @@ public class DepartmentResource {
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findById(@PathParam("id") Long id) {
-		return null;
+		try {
+			return Response.ok(departmentService.findById(id)).build();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+		}
 	}
 
 	/**
-	 * TODO - Implement this method
+	 * Endpoint to get departments list within given range
 	 * @param startPosition the index of the first DepartmentEntity to return
 	 * @param maxResult the maximum number of DepartmentEntity(s) to return
 	 *                  beyond the startPosition
 	 * @return a list of DepartmentEntity(s)
+	 * @throws Exception 
 	 */
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DepartmentEntity> listAll(@QueryParam("start") Integer startPosition,
-			@QueryParam("max") Integer maxResult) {
-
-		return null;
+			@QueryParam("max") Integer maxResult) throws Exception {
+		return departmentService.listAll(startPosition, maxResult);
 	}
 
 	/**
-	 * TODO - Implement this method
+	 * Endpoint to update a department
 	 * @param id the id of the DepartmentEntity to update
 	 * @param department the entity used to update
 	 * @return a Response containing the updated DepartmentEntity
@@ -78,7 +95,13 @@ public class DepartmentResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") Long id, DepartmentEntity department) {
-		return null;
+		try {
+			return Response.ok(departmentService.update(id, department)).build();
+			}
+		catch(Exception e) {
+			e.printStackTrace();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+			}
 	}
 
 }
