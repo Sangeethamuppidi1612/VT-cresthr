@@ -18,11 +18,15 @@ export default (state = defaultState, action) => {
       if (state.data === null)
         return state;
 
-      const index = state.data.findIndex(e => e.id === action.payload.employee.id);
+      let index = -1;
+      if(action.payload.employee && action.payload.employee.id) {
+      	index = state.data.findIndex(e => e.id === action.payload.employee.id);
       const newEmployees = (index === -1) ?
           [...state.data, action.payload.employee] :
           [...state.data.slice(0, index), action.payload.employee, ...state.data.slice(index + 1)];
-      return Object.assign({}, state, { data : newEmployees, saving : false });
+          return Object.assign({}, state, { data : newEmployees, saving : false });  
+      }
+      else return state;
 
     default :
       return state;

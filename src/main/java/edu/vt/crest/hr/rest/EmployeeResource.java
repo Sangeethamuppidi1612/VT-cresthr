@@ -43,7 +43,7 @@ public class EmployeeResource {
 			{ 
 				return Response.ok(createdEmployee).build();
 			}
-			else throw new Exception("Testingggg Employee not created");
+			else throw new Exception();
 		}
 		catch(Exception e) {
 			e.printStackTrace();

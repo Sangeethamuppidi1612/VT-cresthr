@@ -10,10 +10,11 @@ class ApiClient {
     const fullUrl = ApiClient.createUrl(url);
     return fetch(fullUrl)
         .then(ApiClient.checkStatus)
-        .then((response) => response.json());
+        .then((response) => response.json())
+        .catch((e) => {console.log("error", e)});
   }
 
-  async post(url, data) {
+  async post(url, data, state) {
     const fullUrl = ApiClient.createUrl(url);
     return fetch(fullUrl, {
           method : "POST",
@@ -21,10 +22,11 @@ class ApiClient {
           headers : { 'Content-Type': 'application/json' },
         })
         .then(ApiClient.checkStatus)
-        .then((response) => response.json());
+        .then((response) => response.json())
+        .catch((e) => {console.log("error", e)});
   }
 
-  async put(url, data) {
+  async put(url, data, state) {
     const fullUrl = ApiClient.createUrl(url);
     return fetch(fullUrl, {
           method : "PUT",
@@ -32,7 +34,8 @@ class ApiClient {
           headers : { 'Content-Type': 'application/json' },
         })
         .then(ApiClient.checkStatus)
-        .then((response) => response.json());
+        .then((response) => response.json())
+        .catch((e) => {console.log("error", e)});
   }
 
   static createUrl(url) {
@@ -44,6 +47,10 @@ class ApiClient {
       return response;
     } else {
       const error = new Error(response.statusText);
+      response.text().then(function (text) {
+        console.log("error text", text);
+      	alert("Error Status :" + response.status + " :: " +text);
+		})
       error.response = response;
       throw error;
     }

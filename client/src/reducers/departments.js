@@ -20,12 +20,17 @@ export default (state = defaultState, action) => {
     case UPDATE_DEPARTMENT :
       if (state.data === null)
         return state;
+        
+      let index = -1;
+      if(action.payload.department && action.payload.department.id) {
 
-      const index = state.data.findIndex(e => e.id === action.payload.department.id);
+      index = state.data.findIndex(e => e.id === action.payload.department.id);
       const newDepartments = (index === -1) ?
           [...state.data, action.payload.department] :
           [...state.data.slice(0, index), action.payload.department, ...state.data.slice(index + 1)];
       return Object.assign({}, state, { data : newDepartments, saving : false });
+      } 
+      else return state;
 
     default :
       return state;

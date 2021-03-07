@@ -48,15 +48,20 @@ public class EmployeeServiceBean implements EmployeeService {
    * @throws Exception 
    */
   @Override
-  public EmployeeEntity findById(Long id) throws Exception{
+  public EmployeeEntity findById(Long id) throws NoResultException{
 	  try {
 		  EmployeeEntity employee = em.find(EmployeeEntity.class, id);
-		  System.out.println("Found employee : " + employee.getFirstName());
-		  return employee;
+		  if(employee != null) {
+			  System.out.println("Found employee : " + employee.getFirstName());
+			  return employee;
+		  }
+		  else {
+			  throw new NoResultException();
+			  }
 		  } 
-	  catch (Exception e) {
+	  catch (NoResultException e) {
 		  e.printStackTrace();
-		  throw new NoResultException("Could not find employee with id: "+id +e.getMessage());
+		  throw new NoResultException("Could not find employee with id: "+id);
 		}
   }
 
@@ -65,7 +70,7 @@ public class EmployeeServiceBean implements EmployeeService {
    * @throws Exception 
    */
   @Override
-  public List<EmployeeEntity> listAll(Integer startPosition, Integer maxResult) throws Exception {
+  public List<EmployeeEntity> listAll(Integer startPosition, Integer maxResult) throws NoResultException {
 	  try {
 		  TypedQuery<EmployeeEntity> findAllQuery = em.createQuery(
 					"SELECT DISTINCT e FROM Employee e ORDER BY e.id", EmployeeEntity.class);
@@ -79,9 +84,9 @@ public class EmployeeServiceBean implements EmployeeService {
 			final List<EmployeeEntity> results = findAllQuery.getResultList();
 			return results;
 			}
-	  catch (Exception e) {
+	  catch (NoResultException e) {
 		  e.printStackTrace();
-		  throw new Exception("Error getting employees " +e.getMessage());
+		  throw new NoResultException("Error getting employees ");
 		  }
   }
 
@@ -101,7 +106,7 @@ public class EmployeeServiceBean implements EmployeeService {
 			return employee;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Error updating department with id : " +id );
+			throw new PersistenceException("Error updating department with id : " +id );
 		}
   }
 }

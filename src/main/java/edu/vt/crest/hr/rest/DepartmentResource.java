@@ -43,7 +43,7 @@ public class DepartmentResource {
 			{ 
 				return Response.ok(createdDepartment).build();
 			}
-			else throw new Exception("Testingggg Department not created");
+			else throw new Exception();
 		}
 		catch(Exception e) {
 			e.printStackTrace();

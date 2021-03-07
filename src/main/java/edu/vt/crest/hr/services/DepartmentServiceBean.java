@@ -40,7 +40,7 @@ public class DepartmentServiceBean implements DepartmentService {
 		  return department;
 		  }
 	  catch(Exception e) {
-		  throw new PersistenceException("Department not created "+e.getMessage()); 
+		  throw new PersistenceException("Department not created "); 
 		  }
   }
 
@@ -49,18 +49,23 @@ public class DepartmentServiceBean implements DepartmentService {
    * @throws Exception 
    */
   @Override
-  public DepartmentEntity findById(Long id) throws Exception {
+  public DepartmentEntity findById(Long id) throws NoResultException {
 	  try {
 		  DepartmentEntity department = em.find(DepartmentEntity.class, id);
-		  System.out.println("Found department : " + department.getIdentifier());
+		  if(department != null) {
+			  System.out.println("Found department : " + department.getIdentifier());
 
-		  Set<EmployeeEntity> employees = department.getEmployees();
-		  System.out.println("Employees in department : " + department.getIdentifier()+" : "+ employees);
-		  return department;
+			  Set<EmployeeEntity> employees = department.getEmployees();
+			  System.out.println("Employees in department : " + department.getIdentifier()+" : "+ employees);
+			  return department;
+		  }
+		  else {
+			  throw new NoResultException();
+		  }
 		  } 
-	  catch (Exception e) {
+	  catch (NoResultException e) {
 		  e.printStackTrace();
-		  throw new NoResultException("Could not find department with id: "+id +e.getMessage());
+		  throw new NoResultException("Could not find department with id: "+id);
 		}
   }
 
@@ -69,10 +74,10 @@ public class DepartmentServiceBean implements DepartmentService {
    * @throws Exception 
    */
   @Override
-  public List<DepartmentEntity> listAll(Integer startPosition, Integer maxResult) throws Exception {
+  public List<DepartmentEntity> listAll(Integer startPosition, Integer maxResult) throws NoResultException {
 	  try {
 		  TypedQuery<DepartmentEntity> departmentListQuery = em.createQuery(
-					"SELECT DISTINCT d.id, d.identifier, d.name FROM Department d ORDER BY d.id", DepartmentEntity.class);
+					"SELECT DISTINCT d FROM Department d ORDER BY d.id", DepartmentEntity.class);
 		  
 		  if (startPosition != null) {
 			  departmentListQuery.setFirstResult(startPosition);
@@ -81,16 +86,15 @@ public class DepartmentServiceBean implements DepartmentService {
 				departmentListQuery.setMaxResults(maxResult);
 			}
 			final List<DepartmentEntity> departments = departmentListQuery.getResultList();
-			/*
-			 * for(DepartmentEntity dep : departments) { Set<EmployeeEntity> employees =
-			 * dep.getEmployees(); System.out.println("Employees in department : " +
-			 * dep.getIdentifier() + employees); }
-			 */
+			  for(DepartmentEntity dep : departments) { 
+				  Set<EmployeeEntity> employees = dep.getEmployees(); 
+				  System.out.println("Employees in department : " +dep.getIdentifier() + employees); 
+				  }
 			return departments;
 			}
-	  catch (Exception e) {
+	  catch (NoResultException e) {
 		  e.printStackTrace();
-		  throw new Exception("Error getting departments " +e.getMessage());
+		  throw new NoResultException("Error getting departments ");
 		  }
   }
 
@@ -103,14 +107,16 @@ public class DepartmentServiceBean implements DepartmentService {
   public DepartmentEntity update(Long id, DepartmentEntity department) throws Exception {
 		try {
 			DepartmentEntity existingDepartment = em.find(DepartmentEntity.class, id);
-			if(existingDepartment != null) {
-				em.merge(department);
-				System.out.println("Updated department : " + existingDepartment.getIdentifier());
-			}
-			return department;
+			
+			  if(existingDepartment != null) { 
+				  em.merge(department);
+				  System.out.println("Updated department : " +existingDepartment.getIdentifier());
+			  } 
+			  return department;
+			  
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("Error updating department with id : " +id );
+			throw new PersistenceException("Error updating department with id : " +id );
 		}
   }
 
